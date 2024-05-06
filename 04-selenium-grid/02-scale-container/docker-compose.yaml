@@ -1,0 +1,33 @@
+# we can also scale by using this option below
+# docker-compose up --scale chrome 2 --scale firefox 2 -d
+
+version: "3"
+services:
+  hub:
+    image: selenium/hub:4.16
+    ports:
+    - 4444:4444
+    # - 4442:4442
+    # - 4443:4443
+  chrome:
+    image: selenium/node-chrome:4.16
+    shm_size: '2g'
+    depends_on:
+    - hub
+    deploy:
+      replicas: 6
+    environment:
+    - SE_EVENT_BUS_HOST=hub
+    - SE_EVENT_BUS_PUBLISH_PORT=4442
+    - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  firefox:
+    image: selenium/node-firefox:4.16
+    shm_size: '2g'
+    depends_on:
+    - hub
+    deploy:
+      replicas: 0
+    environment:
+    - SE_EVENT_BUS_HOST=hub
+    - SE_EVENT_BUS_PUBLISH_PORT=4442
+    - SE_EVENT_BUS_SUBSCRIBE_PORT=4443    

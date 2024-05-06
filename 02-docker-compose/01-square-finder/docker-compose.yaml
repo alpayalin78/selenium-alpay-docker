@@ -1,0 +1,6 @@
+version: "3"
+services:
+  squares:
+    image: dockerizedalpay/squarefind
+    environment:
+    - NUMBER=5
